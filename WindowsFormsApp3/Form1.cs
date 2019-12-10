@@ -22,7 +22,6 @@ namespace WindowsFormsApp3
 
             var dt = new DataTable();
 
-
             foreach (var column in columns) dt.Columns.Add(column);
 
             var list = doc.Descendants(tableName).Select(desc => desc.Attributes().Select(attr => attr.Value)
