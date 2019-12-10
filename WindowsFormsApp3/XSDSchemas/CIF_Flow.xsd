@@ -1,0 +1,1604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:include schemaLocation="Common.xsd"/>
+  <xs:element name="CI_Flow" type="CI_FlowType"/>
+  <xs:complexType name="CI_FlowType">
+    <xs:sequence>
+      <xs:sequence minOccurs="0">
+        <xs:element name="Header" type="CI_HeaderType"/>
+        <xs:element name="Subject" type="CI_FlowSubjectType" minOccurs="0" maxOccurs="10000000"/>
+        <xs:element name="Contract" type="CI_FlowContractType" minOccurs="0" maxOccurs="30000000"/>
+        <xs:element name="Link" type="CI_FlowLinkType" minOccurs="0" maxOccurs="40000000"/>
+      </xs:sequence>
+      <!-- <xs:element name="Error" type="BusinessErrorType" minOccurs="0" maxOccurs="256"/> -->
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CI_HeaderType">
+    <xs:attribute name="Version" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="DataSourceCode" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="SubmissionMode" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="FileReferenceDate" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="NumberOfPartial">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_FlowSubjectType">
+    <xs:sequence>
+      <!--<xs:element name="SubjectData" type="SubjectType"/>-->
+      <!--<xs:element name="Error" type="BusinessErrorType" minOccurs="0" maxOccurs="256"/> -->
+    </xs:sequence>
+    <xs:attribute name="DataSourceSubjectCode" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_FlowContractType">
+    <xs:sequence>
+      <xs:element name="ContractData" type="CI_ContractType"/>
+      <!-- <xs:element name="Error" type="BusinessErrorType" minOccurs="0" maxOccurs="256"/>-->
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CI_FlowLinkType">
+    <xs:sequence>
+      <xs:element name="LinkData" type="CI_LinkType"/>
+      <!-- <xs:element name="Error" type="BusinessErrorType" minOccurs="0" maxOccurs="256"/>-->
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractType">
+    <xs:sequence>
+      <xs:element name="ContractDetail" type="CI_ContractDetailType"/>
+      <xs:element name="V1_UnutilizedCreditLimitLine" type="CI_ContractUnutilizedCreditLimitLineType" minOccurs="0"/>
+      <xs:element name="V2_Loan" type="CI_ContractLoanType" minOccurs="0"/>
+      <xs:element name="V3_Mortgage" type="CI_ContractMortageType" minOccurs="0"/>
+      <xs:element name="V4_UnutilizedMortgageBalance" type="CI_ContractUnutilizedMortgageBalanceType" minOccurs="0"/>
+      <xs:element name="V5_CurrentAccount" type="CI_ContractCurrentAccountType" minOccurs="0"/>
+      <xs:element name="V6_RenewableLineOfCreditLimit" type="CI_ContractRenewableLineOfCreditLimitType" minOccurs="0"/>
+      <xs:element name="V7_Guarantee" type="CI_ContractGuaranteeType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractDetailType">
+    <xs:attribute name="DataSourceContractCode" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="BranchNo">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="NumberOfSubjects">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractUnutilizedCreditLimitLineType">
+    <xs:sequence>
+      <xs:element name="TransferPartnership" type="CI_ContractTransferPartnerType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="InterestSchema" type="CI_ContractInterestSchemaType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="CompanyInformation" type="CI_ContractCompanyInformationType" minOccurs="0" maxOccurs="256"/>
+    </xs:sequence>
+    <xs:attribute name="ChangeIndicatorR">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeContractTerms">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PartialInformation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="StartingDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Designation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CreditLimitLimit">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="OriginalCurrency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Status">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractLoanType">
+    <xs:sequence>
+      <xs:element name="TransferPartnership" type="CI_ContractTransferPartnerType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="CollateralCase" type="CI_ContractCollateralCaseType" minOccurs="0" maxOccurs="2560"/>
+      <xs:element name="InterestSchema" type="CI_ContractInterestSchemaType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="Forgiveness" type="CI_ContractForgivenessType" minOccurs="0"/>
+      <xs:element name="CompanyInformation" type="CI_ContractCompanyInformationType" minOccurs="0" maxOccurs="256"/>
+    </xs:sequence>
+    <xs:attribute name="ChangeIndicatorB">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeIndicatorG">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeIndicatorR">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeContractTerms">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PartialInformation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="StartingDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Designation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Collateral">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CollateralCoverage">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PaymentFrequency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="LoanUtilized">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="OriginalCurrency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedMonthlyPayment">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="MonthlyPaymentType">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualPaidAmount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CurrentBalance">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PaymentHistory">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="24"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Status">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Arrears">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PastDueAmount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="FirstDefaultDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="LastPaymentDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedBaloonDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="FirstDeferredPaymentDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q3">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q4">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q7">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q8">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q9">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractMortageType">
+    <xs:sequence>
+      <xs:element name="TransferPartnership" type="CI_ContractTransferPartnerType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="CollateralCase" type="CI_ContractCollateralCaseType" minOccurs="0" maxOccurs="2560"/>
+      <xs:element name="InterestSchema" type="CI_ContractInterestSchemaType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="Forgiveness" type="CI_ContractForgivenessType" minOccurs="0"/>
+      <xs:element name="CompanyInformation" type="CI_ContractCompanyInformationType" minOccurs="0" maxOccurs="256"/>
+    </xs:sequence>
+    <xs:attribute name="ChangeIndicatorB">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeIndicatorG">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeIndicatorR">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeContractTerms">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PartialInformation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="StartingDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Designation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Collateral">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CollateralCoverage">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PaymentFrequency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="LoanUtilized">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="OriginalCurrency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedMonthlyPayment">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="MonthlyPaymentType">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualPaidAmount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CurrentBalance">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PaymentHistory">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="24"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Status">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Arrears">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PastDueAmount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="FirstDefaultDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="LastPaymentDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedBaloonDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="FirstDeferredPaymentDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q3">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q4">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q6">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q7">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractUnutilizedMortgageBalanceType">
+    <xs:sequence>
+      <xs:element name="TransferPartnership" type="CI_ContractTransferPartnerType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="InterestSchema" type="CI_ContractInterestSchemaType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="CompanyInformation" type="CI_ContractCompanyInformationType" minOccurs="0" maxOccurs="256"/>
+    </xs:sequence>
+    <xs:attribute name="ChangeIndicatorR">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeContractTerms">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PartialInformation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="StartingDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Designation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CreditLimitLimit">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="OriginalCurrency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Status">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q6">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractCurrentAccountType">
+    <xs:sequence>
+      <xs:element name="Checks" type="CI_ContractCurrentAccountChecksType" minOccurs="0"/>
+      <xs:element name="CreditLimitLine" type="CI_ContractCurrentAccountCreditLimitLineType" minOccurs="0"/>
+      <xs:element name="CompanyInformation" type="CI_ContractCompanyInformationType" minOccurs="0" maxOccurs="256"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractCurrentAccountChecksType">
+    <xs:attribute name="PresentedCheckNumber">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="BouncedCheckNumber">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PaymentOrderNumber">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="UnpaidPaymentOrderNumber">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractCurrentAccountCreditLimitLineType">
+    <xs:sequence>
+      <xs:element name="TransferPartnership" type="CI_ContractTransferPartnerType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="CollateralCase" type="CI_ContractCollateralCaseType" minOccurs="0" maxOccurs="2560"/>
+      <xs:element name="InterestSchema" type="CI_ContractInterestSchemaType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="Forgiveness" type="CI_ContractForgivenessType" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="ChangeIndicatorB">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeIndicatorR">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeContractTerms">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PartialInformation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="StartingDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Designation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Collateral">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CollateralCoverage">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CreditLimitLimit">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CreditLimitUtilized">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="OriginalCurrency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CurrentBalance">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PaymentHistory">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="24"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Status">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Arrears">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PastDueAmount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="FirstDefaultDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q4">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q7">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q8">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q9">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractRenewableLineOfCreditLimitType">
+    <xs:sequence>
+      <xs:element name="TransferPartnership" type="CI_ContractTransferPartnerType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="CollateralCase" type="CI_ContractCollateralCaseType" minOccurs="0" maxOccurs="2560"/>
+      <xs:element name="InterestSchema" type="CI_ContractInterestSchemaType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="Forgiveness" type="CI_ContractForgivenessType" minOccurs="0"/>
+      <xs:element name="CompanyInformation" type="CI_ContractCompanyInformationType" minOccurs="0" maxOccurs="256"/>
+    </xs:sequence>
+    <xs:attribute name="ChangeIndicatorB">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeIndicatorR">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeContractTerms">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PartialInformation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="StartingDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Designation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Collateral">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CollateralCoverage">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PaymentFrequency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CreditLimitLimit">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CreditLimitUtilized">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="OriginalCurrency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedMonthlyPayment">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="MonthlyPaymentType">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualPaidAmount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CurrentBalance">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PaymentHistory">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="24"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Status">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Arrears">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PastDueAmount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="FirstDefaultDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="LastPaymentDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="FirstDeferredPaymentDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q4">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q7">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q8">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Q9">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractGuaranteeType">
+    <xs:sequence>
+      <xs:element name="TransferPartnership" type="CI_ContractTransferPartnerType" minOccurs="0" maxOccurs="256"/>
+      <xs:element name="CollateralCase" type="CI_ContractCollateralCaseType" minOccurs="0" maxOccurs="2560"/>
+      <xs:element name="CompanyInformation" type="CI_ContractCompanyInformationType" minOccurs="0" maxOccurs="256"/>
+    </xs:sequence>
+    <xs:attribute name="ChangeIndicatorR">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ChangeContractTerms">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PartialInformation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="StartingDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Designation">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Collateral">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CollateralCoverage">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="PlannedEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CreditLimitLimit">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="OriginalCurrency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Status">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ActualEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractTransferPartnerType">
+    <xs:attribute name="Indicator">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CompanyName">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="90"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CompanyNo">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Percentage">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractCollateralCaseType">
+    <xs:sequence>
+      <xs:element name="CollateralCaseDetail" type="CI_ContractCollateralCaseDetailType" minOccurs="0" maxOccurs="256"/>
+    </xs:sequence>
+    <xs:attribute name="DataSourceCollateralCode">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractCollateralCaseDetailType">
+    <xs:attribute name="Amount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Type">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractInterestSchemaType">
+    <xs:attribute name="Type">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Linkage">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Base">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Spread">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="7"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="NominalInterest">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="7"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="AnnualizedInterest">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="7"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CreditLimitUtilized">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractForgivenessType">
+    <xs:attribute name="Amount">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Type">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_ContractCompanyInformationType">
+    <xs:attribute name="Name">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="90"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Number">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Country">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CI_LinkType">
+    <xs:attribute name="DataSourceSubjectCode" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="DataSourceContractCode" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Role" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="GuarantorPercentageRange">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ConsentEndDate">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="TicketNumber">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="90"/>
+          <xs:pattern value="[^&lt;&gt;\[\]]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
