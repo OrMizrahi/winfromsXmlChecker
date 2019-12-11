@@ -46,17 +46,42 @@ namespace WindowsFormsApp3
             if (fd.ShowDialog() != DialogResult.OK) return;
 
             var fileName = fd.FileName;
-
+            /*
             var dt1 = CreateDataTable(fileName,
                 new[] {"NumberOfPartial", "DataSourceCode", "SubmissionMode", "FileReferenceDate", "SchemeVersion"},
                 "Header");
             var dt2 = CreateDataTable(fileName, new[] {"DataSourceSubjectCode"}, "Subject");
-            var dt3 = CreateDataTable(fileName, new[] {"StreetNo", "ZipCode", "Confirmed"}, "Address");
-
-
+            var dt3 = CreateDataTable(fileName, new[] {"StreetNo", "ZipCode", "Confirmed"}, "Address");*/
+            /*
             headerDataGrid.DataSource = dt1;
             subjectDataGrid.DataSource = dt2;
-            addressGridView.DataSource = dt3;
+            addressGridView.DataSource = dt3;*/
+
+            var ds = new DataSet();
+            ds.ReadXml(fileName);
+            var i = 0;
+            MessageBox.Show(ds.Tables.Count.ToString());
+            foreach (var tp in tabControl1.TabPages)
+            {
+                var dgv = new DataGridView
+                {
+                    DataSource = ds.Tables[i],
+                    Height = 613,
+                    Width = 1588
+                };
+                var temp = (TabPage)tp;
+                temp.Controls.Add(dgv);
+                i++;
+                if (i >= ds.Tables.Count)  //stops if we try to add a non existent table to a tabPage, for example we have 10 tables and 11 tabPage
+                    break;
+            }
+
+          
+            // var dgv = new DataGridView {DataSource = ds.Tables[0]};
+            //tabPage1.Controls.Add(dgv);
+
+            //dgv = new DataGridView { DataSource = ds.Tables[1] };
+            //tabPage2.Controls.Add(dgv);
         }
     }
 }
