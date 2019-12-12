@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -10,12 +8,14 @@ namespace WindowsFormsApp3
 {
     public partial class Form1 : Form
     {
+        public static DataSet DataSet { get; set; } = new DataSet();
+
         public Form1()
         {
             InitializeComponent();
         }
 
-
+        /*
         public DataTable CreateDataTable(string fileName, string[] columns, string tableName)
         {
             var doc = XDocument.Load(fileName);
@@ -37,51 +37,59 @@ namespace WindowsFormsApp3
 
             return dt;
         }
+        */
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click_1(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog();
-            fd.Filter = "XML|*.xml";
+            tabControl1.Hide();
+            tabControl2.Hide();
+            tabControl3.Hide();
+
+            var fd = new OpenFileDialog {Filter = "XML|*.xml"};
 
             if (fd.ShowDialog() != DialogResult.OK) return;
 
             var fileName = fd.FileName;
-            /*
-            var dt1 = CreateDataTable(fileName,
-                new[] {"NumberOfPartial", "DataSourceCode", "SubmissionMode", "FileReferenceDate", "SchemeVersion"},
-                "Header");
-            var dt2 = CreateDataTable(fileName, new[] {"DataSourceSubjectCode"}, "Subject");
-            var dt3 = CreateDataTable(fileName, new[] {"StreetNo", "ZipCode", "Confirmed"}, "Address");*/
-            /*
-            headerDataGrid.DataSource = dt1;
-            subjectDataGrid.DataSource = dt2;
-            addressGridView.DataSource = dt3;*/
 
-            var ds = new DataSet();
-            ds.ReadXml(fileName);
+            DataSet.ReadXml(fileName);
+
+            if (fileName.Contains("CIF"))
+                ShowAndPopulateTab(tabControl1);
+            else if (fileName.Contains("CMF"))
+                ShowAndPopulateTab(tabControl2);
+            else
+                ShowAndPopulateTab(tabControl3);
+        }
+
+        private static void ShowAndPopulateTab(TabControl tabId)
+        {
             var i = 0;
-            MessageBox.Show(ds.Tables.Count.ToString());
-            foreach (var tp in tabControl1.TabPages)
+            MessageBox.Show(DataSet.Tables.Count.ToString());
+            foreach (TabPage tp in tabId.TabPages)
             {
                 var dgv = new DataGridView
                 {
-                    DataSource = ds.Tables[i],
+                    DataSource = DataSet.Tables[i],
                     Height = 613,
                     Width = 1588
                 };
-                var temp = (TabPage)tp;
-                temp.Controls.Add(dgv);
+
+                tp.Controls.Add(dgv);
                 i++;
-                if (i >= ds.Tables.Count)  //stops if we try to add a non existent table to a tabPage, for example we have 10 tables and 11 tabPage
+
+                if (i >= DataSet.Tables.Count
+                ) //stops if we try to add a non existent table to a tabPage, for example we have 10 tables and 11 tabPage
                     break;
             }
 
-          
-            // var dgv = new DataGridView {DataSource = ds.Tables[0]};
-            //tabPage1.Controls.Add(dgv);
+            tabId.Show();
+        }
 
-            //dgv = new DataGridView { DataSource = ds.Tables[1] };
-            //tabPage2.Controls.Add(dgv);
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            tabControl1.Hide();
+            tabControl2.Hide();
+            tabControl3.Hide();
         }
     }
 }
