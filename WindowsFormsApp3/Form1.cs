@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -57,13 +58,25 @@ namespace WindowsFormsApp3
             DataSet.ReadXml(fileName);
 
             if (fileName.Contains("CIF"))
+            {
+                RemoveEmptyTables(new[] {"SubjectData", "Contract", "ContractData", "Link"});
                 ShowAndPopulateTab(tabControl1);
+            }
+
             else if (fileName.Contains("CMF"))
+            {
+                RemoveEmptyTables(new [] {"Delete","Link","SubjectData"});
                 ShowAndPopulateTab(tabControl2);
+            }
             else if (fileName.Contains("IMF"))
+            {
+                RemoveEmptyTables(new [] {"SubjectData","Immediate","ImmediateData","Link"});
                 ShowAndPopulateTab(tabControl3);
+            }
             else
+            {
                 MessageBox.Show("Error! wrong xml file selected");
+            }
 
             AddTextToLabel(fileName);
         }
@@ -71,7 +84,7 @@ namespace WindowsFormsApp3
         private static void ShowAndPopulateTab(TabControl tabId)
         {
             var i = 0;
-           
+
             foreach (TabPage tp in tabId.TabPages)
             {
                 var dgv = new DataGridView
@@ -81,7 +94,7 @@ namespace WindowsFormsApp3
                     AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
                     Height = 450,
                     Width = 1200,
-                    ForeColor =  Color.DarkBlue,
+                    ForeColor = Color.DarkBlue,
                     GridColor = Color.DarkGray,
                     BorderStyle = BorderStyle.Fixed3D,
                     ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
@@ -97,13 +110,36 @@ namespace WindowsFormsApp3
             }
 
             //only after the whole tab is ready, we display it
-            tabId.Visible = true; 
-            //need to reset the dataSet from all data that it stores
+            tabId.Visible = true;
+            //need to reset the dataSet from all data that it stores, so that in the next file the dataSet will be empty
             DataSet = new DataSet();
         }
 
-        private  void AddTextToLabel(string fileName)
+
+        private static void RemoveEmptyTables(IEnumerable<string> tablesToRemove)
         {
+            foreach (var tableToRemove in tablesToRemove)
+            {
+                var table = DataSet.Tables[tableToRemove];
+                while (table.ChildRelations.Count > 0)
+                {
+                    var relation = table.ChildRelations[0];
+                    DataSet.Tables[relation.ChildTable.TableName].Constraints.Remove(relation.RelationName);
+                    DataSet.Relations.Remove(relation);
+                }
+
+                while (table.ParentRelations.Count > 0) DataSet.Relations.Remove(table.ParentRelations[0]);
+
+                table.Constraints.Clear();
+
+                DataSet.Tables.Remove(table);
+                table.Dispose();
+            }
+        }
+
+        private void AddTextToLabel(string fileName)
+        {
+            label1.Text = "Presented File Type Is : ";
             label1.Visible = true;
 
             if (fileName.Contains("CIF"))
