@@ -3,118 +3,82 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace WindowsFormsApp3
 {
     public partial class Form1 : Form
     {
         public static DataSet DataSet { get; set; } = new DataSet();
+        public static string FileName { get; set; } // cif/cmf/imf
+        public static IList<string> ContractType { get; set; } = new List<string>(); //v2_loan v3_mortgage ...
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        /*
-        public DataTable CreateDataTable(string fileName, string[] columns, string tableName)
-        {
-            var doc = XDocument.Load(fileName);
 
-            var dt = new DataTable();
-
-            foreach (var column in columns) dt.Columns.Add(column);
-
-            var list = doc.Descendants(tableName).Select(desc => desc.Attributes().Select(attr => attr.Value)
-                .ToArray<object>()).ToList();
-
-            foreach (var item in list)
-            {
-                var row = dt.NewRow();
-                row.ItemArray = item;
-
-                dt.Rows.Add(row);
-            }
-
-            return dt;
-        }
-        */
-
-        private void button1_Click_1(object sender, EventArgs e)
+        private void Button1_Click_1(object sender, EventArgs e)
         {
             label1.Visible = false;
             tabControl1.Visible = false;
-            tabControl2.Visible = false;
-            tabControl3.Visible = false;
+            richTextBox1.Visible = false;
 
             var fd = new OpenFileDialog {Filter = "XML|*.xml"};
 
             if (fd.ShowDialog() != DialogResult.OK) return;
 
-            var fileName = fd.FileName;
+            FileName = fd.FileName;
 
-            DataSet.ReadXml(fileName);
+           DataSet.ReadXml(FileName);
 
-            if (fileName.Contains("CIF"))
+            if (FileName.Contains("CIF"))
             {
                 RemoveEmptyTables(new[] {"SubjectData", "Contract", "ContractData", "Link"});
-                ShowAndPopulateTab(tabControl1);
+                ShowAndPopulateTab();
             }
 
-            else if (fileName.Contains("CMF"))
+            else if (FileName.Contains("CMF"))
             {
-                RemoveEmptyTables(new [] {"Delete","Link","SubjectData"});
-                ShowAndPopulateTab(tabControl2);
+                RemoveEmptyTables(new[] {"Delete", "Link", "SubjectData"});
+                ShowAndPopulateTab();
             }
-            else if (fileName.Contains("IMF"))
+            else if (FileName.Contains("IMF"))
             {
-                RemoveEmptyTables(new [] {"SubjectData","Immediate","ImmediateData","Link"});
-                ShowAndPopulateTab(tabControl3);
+                RemoveEmptyTables(new[] {"SubjectData", "Immediate", "ImmediateData", "Link"});
+                ShowAndPopulateTab();
             }
             else
             {
                 MessageBox.Show("Error! wrong xml file selected");
             }
 
-            AddTextToLabel(fileName);
+            AddTextToLabel();
         }
 
-        private static void ShowAndPopulateTab(TabControl tabId)
+        private void ShowAndPopulateTab()
         {
-            var i = 0;
+            //need to reset the TabControl so in next time we populate it it would be without tabs
+            tabControl1.Controls.Clear();
 
-            foreach (TabPage tp in tabId.TabPages)
+            foreach (DataTable table in DataSet.Tables)
             {
-                var dgv = new DataGridView
-                {
-                    DataSource = DataSet.Tables[i],
-                    AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllHeaders,
-                    AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
-                    Height = 450,
-                    Width = 1200,
-                    ForeColor = Color.DarkBlue,
-                    GridColor = Color.DarkGray,
-                    BorderStyle = BorderStyle.Fixed3D,
-                    ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
-                    ScrollBars = ScrollBars.Both
-                };
-
-                tp.Controls.Add(dgv);
-                i++;
-
-                if (i >= DataSet.Tables.Count
-                ) //stops if we try to add a non existent table to a tabPage, for example we have 10 tables and 11 tabPage
-                    break;
+                var dataGridView = CreateDataGridView(table);
+                var tabPage = CreateTabPage(table.TableName, dataGridView);
+                tabControl1.Controls.Add(tabPage);
+                if (!table.TableName.Equals("V2_Loan") && !table.TableName.Equals("V3_Mortgage") &&
+                    !table.TableName.Equals("V4_UnutilizedMortgageBalance"))
+                    continue;
+                ContractType.Add(table.TableName); //for the cif error only
             }
 
             //only after the whole tab is ready, we display it
-            tabId.Visible = true;
+            tabControl1.Visible = true;
+            Check();
             //need to reset the dataSet from all data that it stores, so that in the next file the dataSet will be empty
             DataSet = new DataSet();
         }
-
 
         private static void RemoveEmptyTables(IEnumerable<string> tablesToRemove)
         {
@@ -137,26 +101,80 @@ namespace WindowsFormsApp3
             }
         }
 
-        private void AddTextToLabel(string fileName)
+        private void AddTextToLabel()
         {
             label1.Text = "Presented File Type Is : ";
             label1.Visible = true;
 
-            if (fileName.Contains("CIF"))
+            if (FileName.Contains("CIF"))
                 label1.Text += "CIF";
-            else if (fileName.Contains("CMF"))
+            else if (FileName.Contains("CMF"))
                 label1.Text += "CMF";
-            else if (fileName.Contains("IMF"))
+            else if (FileName.Contains("IMF"))
                 label1.Text += "IMF";
             else
                 label1.Text += "Unsupported File";
         }
 
+        private static DataGridView CreateDataGridView(object dataToPresent)
+        {
+            return new DataGridView
+            {
+                //displays the table into the DataSource
+                DataSource = dataToPresent,
+                AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllHeaders,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
+                Height = 300,
+                Width = 1200,
+                ForeColor = Color.DarkBlue,
+                GridColor = Color.DarkGray,
+                BorderStyle = BorderStyle.Fixed3D,
+                ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
+                ScrollBars = ScrollBars.Both
+            };
+        }
+
+        private static TabPage CreateTabPage(string tabPageName, Control dataGridViewToPresent)
+        {
+            var tabPage = new TabPage
+            {
+                Location = new Point(4, 29),
+                Name = "tabPage1",
+                Padding = new Padding(3),
+                Size = new Size(1200, 450),
+                Text = tabPageName,
+                UseVisualStyleBackColor = true
+            };
+            //adding DataGrid to TabPage
+            tabPage.Controls.Add(dataGridViewToPresent);
+            return tabPage;
+        }
+
+        public void Check()
+        {
+            richTextBox1.ResetText();
+
+            if (FileName.Contains("CIF"))
+                Checker.CifList.ToList().ForEach(action => action(DataSet,richTextBox1,ContractType));
+            else if (FileName.Contains("IMF"))
+                Checker.ImfList.ToList().ForEach(action => action(DataSet,richTextBox1));
+            else
+                Checker.CmfList.ToList().ForEach(action => action(DataSet,richTextBox1));
+
+            richTextBox1.Visible = true;
+        }
+
+       
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            tabControl1.Hide();
-            tabControl2.Hide();
-            tabControl3.Hide();
+            richTextBox1.Visible = false;
+            tabControl1.Visible = false;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //Check("");
         }
     }
 }
