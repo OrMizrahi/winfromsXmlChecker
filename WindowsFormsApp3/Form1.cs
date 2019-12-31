@@ -41,7 +41,7 @@ namespace WindowsFormsApp3
 
             else if (FileName.Contains("CMF"))
             {
-                RemoveEmptyTables(new[] {"Delete", "Link", "SubjectData"});
+                RemoveEmptyTables(new[] {"Delete", "Subject"});
                 ShowAndPopulateTab();
             }
             else if (FileName.Contains("IMF"))
@@ -157,7 +157,7 @@ namespace WindowsFormsApp3
             if (FileName.Contains("CIF"))
                 Checker.CifList.ToList().ForEach(action => action(DataSet,richTextBox1,ContractType));
             else if (FileName.Contains("IMF"))
-                Checker.ImfList.ToList().ForEach(action => action(DataSet,richTextBox1));
+                Checker.ImfList.ToList().ForEach(action => action(DataSet,richTextBox1,ContractType));
             else
                 Checker.CmfList.ToList().ForEach(action => action(DataSet,richTextBox1));
 
