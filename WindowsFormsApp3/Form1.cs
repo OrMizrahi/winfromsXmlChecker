@@ -18,8 +18,7 @@ namespace WindowsFormsApp3
             InitializeComponent();
         }
 
-
-        private void Button1_Click_1(object sender, EventArgs e)
+        private void BtnLoadFile(object sender, EventArgs e)
         {
             label1.Visible = false;
             tabControl1.Visible = false;
@@ -57,6 +56,12 @@ namespace WindowsFormsApp3
             AddTextToLabel();
         }
 
+        private void BtnCheck(object sender, EventArgs e)
+        {
+            Check();
+            DataSet = new DataSet();
+        }
+
         private void ShowAndPopulateTab()
         {
             //need to reset the TabControl so in next time we populate it it would be without tabs
@@ -75,9 +80,6 @@ namespace WindowsFormsApp3
 
             //only after the whole tab is ready, we display it
             tabControl1.Visible = true;
-            Check();
-            //need to reset the dataSet from all data that it stores, so that in the next file the dataSet will be empty
-            DataSet = new DataSet();
         }
 
         private static void RemoveEmptyTables(IEnumerable<string> tablesToRemove)
@@ -172,9 +174,5 @@ namespace WindowsFormsApp3
             tabControl1.Visible = false;
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //Check("");
-        }
     }
 }

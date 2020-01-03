@@ -32,6 +32,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.label1 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -47,7 +48,7 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "Load File";
             this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
+            this.button1.Click += new System.EventHandler(this.BtnLoadFile);
             // 
             // tabControl1
             // 
@@ -81,9 +82,20 @@
             this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(39, 119);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(121, 47);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "Check File";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.BtnCheck);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1924, 775);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tabControl1);
@@ -104,6 +116,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         public System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button button2;
     }
 }
 
