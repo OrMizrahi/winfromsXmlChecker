@@ -77,14 +77,27 @@ namespace WindowsFormsApp3
 
                 foreach (DataRow row in rows)
                 {
-                    var arrears = row.Field<string>("Arrears");
+                    var arrearsExists = row.Table.Columns.Contains("Arrears");
+                    var arrears = "";
+                    if (arrearsExists)
+                    {
+                         arrears = row.Field<string>("Arrears");
+                    }
+                    
                     var b3 = long.TryParse(row.Field<string>("PastDueAmount"), out var pastDueAmount);
                     var status = row.Field<string>("Status");
-                    var b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out var firstDefaultDate);
+
+                    var firstDefaultDateExists = row.Table.Columns.Contains("FirstDefaultDate");
+                    var b2 = true;
+                    var firstDefaultDate = new DateTime();
+                    if (firstDefaultDateExists)
+                    {
+                         b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out firstDefaultDate);
+                    }
 
                     if (status.Equals("A") || status.Equals("A1"))
                     {
-                        if (b1 && b2 && firstDefaultDate > referenceDate.AddDays(-30))
+                        if (b1 && b2 && firstDefaultDateExists && firstDefaultDate > referenceDate.AddDays(-30))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! FirstDefaultDate > ReferenceDate-30 days - found at row number {rows.IndexOf(row)} \n");
                         if (pastDueAmount <= 200 || b3 == false)
@@ -93,7 +106,7 @@ namespace WindowsFormsApp3
                         if (!b2)
                             richTextBox.AppendText(
                                 $"error at {contractType} ! can't have status A/A1 without firstDefaultDate  - found at row number {rows.IndexOf(row)} \n");
-                        if (string.IsNullOrEmpty(arrears))
+                        if (arrearsExists && string.IsNullOrEmpty(arrears))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! can't have status A/A1 without arrears  - found at row number {rows.IndexOf(row)} \n");
                     }
@@ -238,19 +251,31 @@ namespace WindowsFormsApp3
                 var rows = dataSet.Tables[contractType].Rows;
                 foreach (DataRow row in rows)
                 {
+                    var arrearsExists = row.Table.Columns.Contains("Arrears");
+                    var arrears = "";
+                    if (arrearsExists)
+                    {
+                        arrears = row.Field<string>("Arrears");
+                    }
+
                     var status = row.Field<string>("Status");
-                    var arrears = row.Field<string>("Arrears");
                     var b4 = long.TryParse(row.Field<string>("PastDueAmount"), out var pastDueAmount);
-                    var b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out var firstDefaultDate);
+                    var firstDefaultDateExists = row.Table.Columns.Contains("FirstDefaultDate");
+                    var b2 = true;
+                    var firstDefaultDate = new DateTime();
+                    if (firstDefaultDateExists)
+                    {
+                        b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out firstDefaultDate);
+                    }
                     var b3 = DateTime.TryParse(row.Field<string>("StartingDate"), out var startingDate);
 
-                    if (b1 && b2 && b3 && (firstDefaultDate > referenceDate || firstDefaultDate < startingDate))
+                    if (b1 && b2 && b3 && firstDefaultDateExists && (firstDefaultDate > referenceDate || firstDefaultDate < startingDate))
                         richTextBox.AppendText(
                             $"error at {contractType} ! firstDefaultDate can't be bigger than referenceDate/ firstDefaultDate can't be less than startingDate   - found at row number {rows.IndexOf(row)} \n");
 
                     if (status.Equals("A") || status.Equals("A1"))
                     {
-                        if (b1 && b2 && firstDefaultDate > referenceDate.AddDays(-30))
+                        if (b1 && b2 && firstDefaultDateExists && firstDefaultDate > referenceDate.AddDays(-30))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! FirstDefaultDate > ReferenceDate-30 days - found at row number {rows.IndexOf(row)} \n");
 
@@ -262,7 +287,7 @@ namespace WindowsFormsApp3
                             richTextBox.AppendText(
                                 $"error at {contractType} !  status in (A or A1) must have firstDefaultDate  - found at row number {rows.IndexOf(row)} \n");
 
-                        if (string.IsNullOrEmpty(arrears))
+                        if (arrearsExists && string.IsNullOrEmpty(arrears))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! status in (A or A1) must have arrears  - found at row number {rows.IndexOf(row)} \n");
                     }
@@ -305,11 +330,18 @@ namespace WindowsFormsApp3
                             out firstDeferredPaymentDate);
 
                     var b2 = DateTime.TryParse(row.Field<string>("StartingDate"), out var startingDate);
-                    var b3 = DateTime.TryParse(row.Field<string>("PlannedEndDate"), out var plannedEndDate);
+
+                    var plannedEndDateExists = row.Table.Columns.Contains("PlannedEndDate");
+                    var b3 = true;
+                    var plannedEndDate = new DateTime();
+                    if (plannedEndDateExists)
+                    {
+                        b3 = DateTime.TryParse(row.Field<string>("PlannedEndDate"), out plannedEndDate);
+                    }
                     var b4 = int.TryParse(row.Field<string>("PaymentFrequency"), out var paymentFrequency);
 
                     if ((b1 && b2 && firstDeferredPaymentDate < startingDate) ||
-                        (b1 && b3 && firstDeferredPaymentDate > plannedEndDate))
+                        (b1 && b3 && plannedEndDateExists && firstDeferredPaymentDate > plannedEndDate))
                         richTextBox.AppendText(
                             $"error at {contractType} !firstDeferredPaymentDate can't be less than startingDate or more than plannedEndDate - found at row number {rows.IndexOf(row)} \n");
 
@@ -480,10 +512,16 @@ namespace WindowsFormsApp3
 
                 foreach (DataRow row in rows)
                 {
-                    var b1 = DateTime.TryParse(row.Field<string>("LastPaymentDate"), out var lastPaymentDate);
+                    var lastPaymentDateExists = row.Table.Columns.Contains("LastPaymentDate");
+                    var b1 = true;
+                    var lastPaymentDate = new DateTime();
+                    if (lastPaymentDateExists)
+                    {
+                        b1 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out lastPaymentDate);
+                    }
                     var b2 = DateTime.TryParse(row.Field<string>("StartingDate"), out var startingDate);
 
-                    if (b1 && b2 && lastPaymentDate < startingDate)
+                    if (b1 && b2 &&  lastPaymentDateExists && lastPaymentDate < startingDate)
                         richTextBox.AppendText(
                             $"error at {contractType} ! LastPaymentDate can't be less than StartingDate - found at row number {rows.IndexOf(row)} \n");
 
@@ -541,18 +579,25 @@ namespace WindowsFormsApp3
                 foreach (DataRow row in rows)
                 {
                     var b1 = long.TryParse(row.Field<string>("PlannedMonthlyPayment"), out var plannedMonthlyPayment);
-                    var monthlyPaymentType = row.Field<string>("MonthlyPaymentType");
 
+                    var monthlyPaymentTypeExists = row.Table.Columns.Contains("MonthlyPaymentType");
+                    var monthlyPaymentType = "";
+                    if (monthlyPaymentTypeExists)
+                    {
+                        monthlyPaymentType = row.Field<string>("MonthlyPaymentType");
+                    }
                     if (b1 && plannedMonthlyPayment < 0)
                         richTextBox.AppendText(
                             $"error at {contractType} ! PlannedMonthlyPayment can't be negative - found at row number {rows.IndexOf(row)} \n");
 
-                    if (((b1 == false || plannedMonthlyPayment != 0) && b1) || string.IsNullOrEmpty(monthlyPaymentType))
+                    if ((b1 == false || monthlyPaymentTypeExists && plannedMonthlyPayment != 0) && b1 || monthlyPaymentTypeExists && string.IsNullOrEmpty(monthlyPaymentType))
                         continue;
 
                     richTextBox.AppendText(
                         $"error at {contractType} ! MonthlyPaymentType must have PlannedMonthlyType > 0, MonthlyPaymentType cleared! - found at row number {rows.IndexOf(row)} \n");
-                    row.SetField("MonthlyPaymentType", "");
+
+                    if (monthlyPaymentTypeExists)
+                        row.SetField("MonthlyPaymentType", "");
 
                 }
             }
@@ -573,8 +618,23 @@ namespace WindowsFormsApp3
                 {
                     var b1 = long.TryParse(row.Field<string>("PastDueAmount"), out var pastDueAmount);
                     var status = row.Field<string>("Status");
-                    var b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out var firstDefaultDate);
-                    var arrears = row.Field<string>("Arrears");
+
+
+                    var firstDefaultDateExists = row.Table.Columns.Contains("FirstDefaultDate");
+                    var b2 = true;
+                    var firstDefaultDate = new DateTime();
+                    if (firstDefaultDateExists)
+                    {
+                        b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out firstDefaultDate);
+                    }
+
+
+                    var arrearsExists = row.Table.Columns.Contains("Arrears");
+                    var arrears = "";
+                    if (arrearsExists)
+                    {
+                        arrears = row.Field<string>("Arrears");
+                    }
 
                     if (b1 && pastDueAmount < 0)
                         richTextBox.AppendText(
@@ -582,14 +642,14 @@ namespace WindowsFormsApp3
 
                     if (status.Equals("A") || status.Equals("A1"))
                     {
-                        if (b2 && b3 && firstDefaultDate > referenceDate.AddDays(-30))
+                        if (b2 && b3 && firstDefaultDateExists && firstDefaultDate > referenceDate.AddDays(-30))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! FirstDefaultDate > ReferenceDate-30 days  - found at row number {rows.IndexOf(row)} \n");
                         if (b2 == false)
                             richTextBox.AppendText(
                                 $"error at {contractType} ! status in (A or A1) must have firstDefaultDate  - found at row number {rows.IndexOf(row)} \n");
 
-                        if (string.IsNullOrEmpty(arrears))
+                        if (arrearsExists && string.IsNullOrEmpty(arrears))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! status in (A or A1) must have arrears  - found at row number {rows.IndexOf(row)} \n");
 
@@ -633,7 +693,13 @@ namespace WindowsFormsApp3
                         b1 = DateTime.TryParse(row.Field<string>("FirstDeferredPaymentDate"), out _);
 
                     var b2 = int.TryParse(row.Field<string>("PaymentFrequency"), out var paymentFrequency);
-                    var b3 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out _);
+
+                    var plannedBaloonDateExists = row.Table.Columns.Contains("PlannedBaloonDate");
+                    var b3 = true;
+                    if (plannedBaloonDateExists)
+                    {
+                        b3 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out _);
+                    }
 
                     if ((b1 && b2 && paymentFrequency != 11) || (b1 == false && b2 && paymentFrequency == 11))
                         richTextBox.AppendText(
@@ -644,7 +710,8 @@ namespace WindowsFormsApp3
 
                     richTextBox.AppendText(
                         $"error at {contractType} ! PlannedBaloonDate must only exist with PaymentFrequency = 10 , PlannedBaloonDate cleared!! - found at row number {rows.IndexOf(row)} \n");
-                    row.SetField("PlannedBaloonDate", "");
+                    if (plannedBaloonDateExists)
+                        row.SetField("PlannedBaloonDate", "");
 
                 }
             }
@@ -661,9 +728,14 @@ namespace WindowsFormsApp3
 
                 foreach (DataRow row in rows)
                 {
-                    var paymentHistory = row.Field<string>("PaymentHistory");
+                    var paymentHistoryExists = row.Table.Columns.Contains("PaymentHistory");
+                    var paymentHistory = "";
+                    if (paymentHistoryExists)
+                    {
+                        paymentHistory = row.Field<string>("Arrears");
+                    }
                     //should check each character must belong to the PaymentHistoryDomain
-                    if (paymentHistory.Length != 24)
+                    if (paymentHistoryExists && paymentHistory.Length != 24)
                         richTextBox.AppendText(
                             $"error at {contractType} ! PaymentHistory must be 24 characters long! - found at row number {rows.IndexOf(row)} \n");
                 }
@@ -681,16 +753,30 @@ namespace WindowsFormsApp3
 
                 foreach (DataRow row in rows)
                 {
-                    var b1 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out var plannedBaloonDate);
+                    var plannedBaloonDateExists = row.Table.Columns.Contains("PlannedBaloonDate");
+                    var b1 = true;
+                    var plannedBaloonDate = new DateTime();
+                    if (plannedBaloonDateExists)
+                    {
+                        b1 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out plannedBaloonDate);
+                    }
+
                     var b2 = DateTime.TryParse(row.Field<string>("StartingDate"), out var startingDate);
-                    var b3 = DateTime.TryParse(row.Field<string>("PlannedEndDate"), out var plannedEndDate);
+
+                    var plannedEndDateExists = row.Table.Columns.Contains("plannedEndDate");
+                    var b3 = true;
+                    var plannedEndDate = new DateTime();
+                    if (plannedEndDateExists)
+                    {
+                        b3 = DateTime.TryParse(row.Field<string>("plannedEndDate"), out plannedEndDate);
+                    }
                     var b4 = int.TryParse(row.Field<string>("PaymentFrequency"), out var paymentFrequency);
 
-                    if (b1 && b2 && plannedBaloonDate < startingDate)
+                    if (b1 && b2 && plannedBaloonDateExists && plannedBaloonDate < startingDate)
                         richTextBox.AppendText(
                             $"error at {contractType} ! PlannedBaloonDate can't be less than StartingDate - found at row number {rows.IndexOf(row)} \n");
 
-                    if (b1 && b3 && plannedBaloonDate > plannedEndDate)
+                    if (b1 && b3 && plannedBaloonDateExists && plannedEndDateExists && plannedBaloonDate > plannedEndDate)
                         richTextBox.AppendText(
                             $"error at {contractType} ! PlannedBaloonDate can't be greater than PlannedEndDate - found at row number {rows.IndexOf(row)} \n");
 
@@ -699,7 +785,8 @@ namespace WindowsFormsApp3
 
                     richTextBox.AppendText(
                         $"error at {contractType} ! PlannedBaloonDate must only exist with paymentFrequency = 10 ,PlannedBaloonDate cleared! - found at row number {rows.IndexOf(row)} \n");
-                    row.SetField("PlannedBaloonDate", "");
+                    if(plannedBaloonDateExists)
+                        row.SetField("PlannedBaloonDate", "");
                 }
             }
         }
@@ -712,25 +799,36 @@ namespace WindowsFormsApp3
 
                 foreach (DataRow row in rows)
                 {
-                    var b1 = DateTime.TryParse(row.Field<string>("PlannedEndDate"), out var plannedEndDate);
+                    var plannedEndDateExists = row.Table.Columns.Contains("PlannedEndDate");
+                    var b1 = true;
+                    DateTime plannedEndDate = default;
+                    if (plannedEndDateExists)
+                    {
+                        b1 = DateTime.TryParse(row.Field<string>("PlannedEndDate"), out plannedEndDate);
+                    }
                     var b2 = DateTime.TryParse(row.Field<string>("StartingDate"), out var startingDate);
 
-                    if (b1 && b2 && plannedEndDate < startingDate)
+                    if (b1 && b2 &&  plannedEndDateExists  &&  plannedEndDate < startingDate)
                         richTextBox.AppendText(
                             $"error at {contractType} ! PlannedEndDate can't be less than StartingDate - found at row number {rows.IndexOf(row)} \n");
 
                     if (contractType == "V4_UnutilizedMortgageBalance")
                         goto REPEAT;
 
+
                     DateTime firstDeferredPaymentDate = default;
                     var b3 = false;
-
-
                     if (row.Table.Columns.Contains("FirstDeferredPaymentDate"))
                         b3 = DateTime.TryParse(row.Field<string>("FirstDeferredPaymentDate"),
                             out firstDeferredPaymentDate);
 
-                    var b4 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out var plannedBaloonDate);
+
+                    DateTime plannedBaloonDate = default;
+                    var b4 = false;
+                    if (row.Table.Columns.Contains("PlannedBaloonDate"))
+                        b4 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"),
+                            out plannedBaloonDate);
+                    
 
                     if (b3)
                     {
