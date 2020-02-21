@@ -87,17 +87,16 @@ namespace WindowsFormsApp3
                     var b3 = long.TryParse(row.Field<string>("PastDueAmount"), out var pastDueAmount);
                     var status = row.Field<string>("Status");
 
-                    var firstDefaultDateExists = row.Table.Columns.Contains("FirstDefaultDate");
-                    var b2 = true;
+                    var b2 = false;
                     var firstDefaultDate = new DateTime();
-                    if (firstDefaultDateExists)
+                    if (row.Table.Columns.Contains("FirstDefaultDate"))
                     {
                          b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out firstDefaultDate);
                     }
 
                     if (status.Equals("A") || status.Equals("A1"))
                     {
-                        if (b1 && b2 && firstDefaultDateExists && firstDefaultDate > referenceDate.AddDays(-30))
+                        if (b1 && b2 && firstDefaultDate > referenceDate.AddDays(-30))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! FirstDefaultDate > ReferenceDate-30 days - found at row number {rows.IndexOf(row)} \n");
                         if (pastDueAmount <= 200 || b3 == false)
@@ -115,7 +114,7 @@ namespace WindowsFormsApp3
                     {
                         if (b2)
                             richTextBox.AppendText(
-                                $"error at {contractType} ! can't have status C/T with firstDefaultValue  - found at row number {rows.IndexOf(row)} \n");
+                                $"error at {contractType} ! can't have status C/T with firstDefaultDate  - found at row number {rows.IndexOf(row)} \n");
                         if (!string.IsNullOrEmpty(arrears))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! can't have status C/T with arrears  - found at row number {rows.IndexOf(row)} \n");
@@ -260,22 +259,23 @@ namespace WindowsFormsApp3
 
                     var status = row.Field<string>("Status");
                     var b4 = long.TryParse(row.Field<string>("PastDueAmount"), out var pastDueAmount);
-                    var firstDefaultDateExists = row.Table.Columns.Contains("FirstDefaultDate");
-                    var b2 = true;
+
+                    var b2 = false;
                     var firstDefaultDate = new DateTime();
-                    if (firstDefaultDateExists)
+                    if (row.Table.Columns.Contains("FirstDefaultDate"))
                     {
                         b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out firstDefaultDate);
                     }
+
                     var b3 = DateTime.TryParse(row.Field<string>("StartingDate"), out var startingDate);
 
-                    if (b1 && b2 && b3 && firstDefaultDateExists && (firstDefaultDate > referenceDate || firstDefaultDate < startingDate))
+                    if (b1 && b2 && b3  && (firstDefaultDate > referenceDate || firstDefaultDate < startingDate))
                         richTextBox.AppendText(
                             $"error at {contractType} ! firstDefaultDate can't be bigger than referenceDate/ firstDefaultDate can't be less than startingDate   - found at row number {rows.IndexOf(row)} \n");
 
                     if (status.Equals("A") || status.Equals("A1"))
                     {
-                        if (b1 && b2 && firstDefaultDateExists && firstDefaultDate > referenceDate.AddDays(-30))
+                        if (b1 && b2 && firstDefaultDate > referenceDate.AddDays(-30))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! FirstDefaultDate > ReferenceDate-30 days - found at row number {rows.IndexOf(row)} \n");
 
@@ -296,7 +296,7 @@ namespace WindowsFormsApp3
                     {
                         if (b2)
                             richTextBox.AppendText(
-                                $"error at {contractType} ! status in (C or T) must not have firstDefaultValue  - found at row number {rows.IndexOf(row)} \n");
+                                $"error at {contractType} ! status in (C or T) must not have firstDefaultDate  - found at row number {rows.IndexOf(row)} \n");
 
                         if (!string.IsNullOrEmpty(arrears))
                             richTextBox.AppendText(
@@ -593,12 +593,14 @@ namespace WindowsFormsApp3
                     if ((b1 == false || monthlyPaymentTypeExists && plannedMonthlyPayment != 0) && b1 || monthlyPaymentTypeExists && string.IsNullOrEmpty(monthlyPaymentType))
                         continue;
 
-                    richTextBox.AppendText(
-                        $"error at {contractType} ! MonthlyPaymentType must have PlannedMonthlyType > 0, MonthlyPaymentType cleared! - found at row number {rows.IndexOf(row)} \n");
-
                     if (monthlyPaymentTypeExists)
-                        row.SetField("MonthlyPaymentType", "");
+                    {
+                        richTextBox.AppendText(
+                       $"error at {contractType} ! MonthlyPaymentType must have PlannedMonthlyType > 0, MonthlyPaymentType cleared! - found at row number {rows.IndexOf(row)} \n");
 
+                        if (monthlyPaymentTypeExists)
+                            row.SetField("MonthlyPaymentType", "");
+                    }
                 }
             }
         }
@@ -620,14 +622,12 @@ namespace WindowsFormsApp3
                     var status = row.Field<string>("Status");
 
 
-                    var firstDefaultDateExists = row.Table.Columns.Contains("FirstDefaultDate");
-                    var b2 = true;
-                    var firstDefaultDate = new DateTime();
-                    if (firstDefaultDateExists)
+                    var b2 = false;
+                    DateTime firstDefaultDate = default;
+                    if (row.Table.Columns.Contains("FirstDefaultDate"))
                     {
                         b2 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out firstDefaultDate);
                     }
-
 
                     var arrearsExists = row.Table.Columns.Contains("Arrears");
                     var arrears = "";
@@ -642,7 +642,7 @@ namespace WindowsFormsApp3
 
                     if (status.Equals("A") || status.Equals("A1"))
                     {
-                        if (b2 && b3 && firstDefaultDateExists && firstDefaultDate > referenceDate.AddDays(-30))
+                        if (b2 && b3 && firstDefaultDate > referenceDate.AddDays(-30))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! FirstDefaultDate > ReferenceDate-30 days  - found at row number {rows.IndexOf(row)} \n");
                         if (b2 == false)
@@ -869,14 +869,21 @@ namespace WindowsFormsApp3
                 foreach (DataRow row in rows)
                 {
                     var b1 = long.TryParse(row.Field<string>("PlannedMonthlyPayment"), out var plannedMonthlyPayment);
-                    var monthlyPaymentType = row.Field<string>("MonthlyPaymentType");
 
+                    var monthlyPaymentTypeExists = row.Table.Columns.Contains("MonthlyPaymentType");
+                    var monthlyPaymentType = "";
+                    if (monthlyPaymentTypeExists)
+                    {
+                        monthlyPaymentType = row.Field<string>("MonthlyPaymentType");
+                    }
+                   
                     if ((!b1 || plannedMonthlyPayment != 0) && b1 || string.IsNullOrEmpty(monthlyPaymentType))
                         continue;
 
                     richTextBox.AppendText(
                         $"error at {contractType} ! MonthlyPaymentType must have plannedMonthlyPayment > 0, MonthlyPaymentType cleared! - found at row number {rows.IndexOf(row)} \n");
-                    row.SetField("MonthlyPaymentType", "");
+                    if (monthlyPaymentTypeExists)
+                        row.SetField("MonthlyPaymentType", "");
 
                 }
             }
@@ -895,12 +902,33 @@ namespace WindowsFormsApp3
                 {
                     var status = row.Field<string>("Status");
 
+                    var q3 = false;
+                    if (row.Table.Columns.Contains("Q3"))
+                    {
+                        q3 = row.Field<string>("Q4") == "1";
+                    }
+
+                    var q4 = false;
+                    if (row.Table.Columns.Contains("Q4"))
+                    {
+                        q4 = row.Field<string>("Q4") == "1";
+                    }
+
+                    var q6 = false;
+                    if (row.Table.Columns.Contains("Q6"))
+                    {
+                        q6 = row.Field<string>("Q6") == "1";
+                    }
+
+                    var q7 = false;
+                    if (row.Table.Columns.Contains("Q7"))
+                    {
+                        q7 = row.Field<string>("Q7") == "1";
+                    }
+
+
                     if (contractType == "V2_Loan")
                     {
-                        var q3 = row.Field<string>("Q3") == "1";
-                        var q4 = row.Field<string>("Q4") == "1";
-                        var q7 = row.Field<string>("Q7") == "1";
-
                         if (q3 && !statusesToBeChecked1.Contains(status))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! Q3 is true and Status not in (A, A1, B, P) - found at row number {rows.IndexOf(row)} \n");
@@ -913,11 +941,6 @@ namespace WindowsFormsApp3
                     }
                     else if (contractType.Equals("V3_Mortgage"))
                     {
-                        var q3 = row.Field<string>("Q3") == "1";
-                        var q4 = row.Field<string>("Q4") == "1";
-                        var q7 = row.Field<string>("Q7") == "1";
-                        var q6 = row.Field<string>("Q6") == "1";
-
                         if (q3 && !statusesToBeChecked1.Contains(status))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! Q3 is true and Status not in (A, A1, B, P) - found at row number {rows.IndexOf(row)} \n");
@@ -933,8 +956,6 @@ namespace WindowsFormsApp3
                     }
                     else
                     {
-                        var q6 = row.Field<string>("Q6") == "1";
-
                         if (q6 && !statusesToBeChecked2.Contains(status))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! Q6 is true and Status not in (C, T, A, A1, B, P) - found at row number {rows.IndexOf(row)} \n");
@@ -955,7 +976,12 @@ namespace WindowsFormsApp3
                 foreach (DataRow row in rows)
                 {
                     var b2 = DateTime.TryParse(row.Field<string>("StartingDate"), out var startingDate);
-                    var b3 = DateTime.TryParse(row.Field<string>("PlannedEndDate"), out var plannedEndDate);
+                  
+                    var b3 = false;
+                    DateTime plannedEndDate = default;
+
+                    if (row.Table.Columns.Contains("PlannedEndDate"))
+                        b3 = DateTime.TryParse(row.Field<string>("PlannedEndDate"), out plannedEndDate);
 
                     var b4 = false;
                     DateTime actualEndDate = default;
@@ -982,17 +1008,26 @@ namespace WindowsFormsApp3
 
                     if (contractType == "V4_UnutilizedMortgageBalance") goto REPEAT;
 
-                    var b5 = DateTime.TryParse(row.Field<string>("LastPaymentDate"), out var lastPaymentDate);
+                    var b5 = false;
+                    DateTime lastPaymentDate = default;
+                    if (row.Table.Columns.Contains("LastPaymentDate"))
+                        b5 = DateTime.TryParse(row.Field<string>("LastPaymentDate"), out lastPaymentDate);
 
                     var b6 = false;
                     DateTime firstDeferredPaymentDate = default;
-
                     if (row.Table.Columns.Contains("ActualEndDate"))
                         b6 = DateTime.TryParse(row.Field<string>("FirstDeferredPaymentDate"),
                             out firstDeferredPaymentDate);
 
-                    var b7 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out var plannedBaloonDate);
-                    var b8 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out var firstDefaultDate);
+                    var b7 = false;
+                    DateTime plannedBaloonDate = default;
+                    if (row.Table.Columns.Contains("PlannedBaloonDate"))
+                        b7 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out plannedBaloonDate);
+
+                    var b8 = false;
+                    DateTime firstDefaultDate = default;
+                    if (row.Table.Columns.Contains("FirstDefaultDate"))
+                        b8 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out firstDefaultDate);
 
                     if (b2 && b5 && startingDate > lastPaymentDate)
                         richTextBox.AppendText(
@@ -1070,12 +1105,40 @@ namespace WindowsFormsApp3
                         goto REPEAT;
                     }
 
-                    var arrears = row.Field<string>("Arrears");
-                    var b4 = long.TryParse(row.Field<string>("PastDueAmount"), out var pastDueAmount);
-                    var q3 = row.Field<string>("Q3").Equals("1");
-                    var q4 = row.Field<string>("Q4").Equals("1");
-                    var q7 = row.Field<string>("Q7").Equals("1");
-                    var b3 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out var firstDefaultDate);
+                    var arrearsExists = row.Table.Columns.Contains("Arrears");
+                    var arrears = "";
+                    if (arrearsExists)
+                    {
+                        arrears = row.Field<string>("Arrears");
+                    }
+
+                    var b4 = false;
+                    long pastDueAmount = default;
+                    if (row.Table.Columns.Contains("PastDueAmount"))
+                        b4 = long.TryParse(row.Field<string>("PastDueAmount"), out pastDueAmount);
+
+                    var q3 = false;
+                    if (row.Table.Columns.Contains("Q3"))
+                    {
+                        q3 = row.Field<string>("Q4") == "1";
+                    }
+
+                    var q4 = false;
+                    if (row.Table.Columns.Contains("Q4"))
+                    {
+                        q4 = row.Field<string>("Q4") == "1";
+                    }
+                    
+                    var q7 = false;
+                    if (row.Table.Columns.Contains("Q7"))
+                    {
+                        q7 = row.Field<string>("Q7") == "1";
+                    }
+
+                    var b3 = false;
+                    DateTime firstDefaultDate = default;
+                    if (row.Table.Columns.Contains("FirstDefaultDate"))
+                        b3 = DateTime.TryParse(row.Field<string>("FirstDefaultDate"), out firstDefaultDate);
 
                     if (q3 && !statusesToBeChecked2.Contains(status))
                         richTextBox.AppendText(
@@ -1099,11 +1162,11 @@ namespace WindowsFormsApp3
                             richTextBox.AppendText(
                                 $"error at {contractType} ! status A/A1 must have firstDefaultDate  - found at row number {rows.IndexOf(row)} \n");
 
-                        if (string.IsNullOrEmpty(arrears))
+                        if (arrearsExists && string.IsNullOrEmpty(arrears))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! status A/A1 must have arrears  - found at row number {rows.IndexOf(row)} \n");
 
-                        if (pastDueAmount <= 200 || b4 == false)
+                        if (b4 && pastDueAmount <= 200 || b4 == false)
                             richTextBox.AppendText(
                                 $"error at {contractType} !status A/A1 must not have PastDueAmount  <= 200 or null  - found at row number {rows.IndexOf(row)} \n");
                     }
@@ -1114,7 +1177,7 @@ namespace WindowsFormsApp3
                             richTextBox.AppendText(
                                 $"error at {contractType} ! status C/T  must not have FirstDefaultDate - found at row number {rows.IndexOf(row)} \n");
 
-                        if (!string.IsNullOrEmpty(arrears))
+                        if (arrearsExists &&  !string.IsNullOrEmpty(arrears))
                             richTextBox.AppendText(
                                 $"error at {contractType} ! status C/T must not have arrears  - found at row number {rows.IndexOf(row)} \n");
 
@@ -1167,13 +1230,17 @@ namespace WindowsFormsApp3
             foreach (DataRow row in rows)
             {
                 var b1 = int.TryParse(row.Field<string>("Role"), out var role);
-                var guarantorPercentageRange = row.Field<string>("GuarantorPercentageRange");
 
-                if (b1 && role == 2 && string.IsNullOrEmpty(guarantorPercentageRange))
+                var b4 = false;
+                long guarantorPercentageRange = default;
+                if (row.Table.Columns.Contains("GuarantorPercentageRange"))
+                    b4 = long.TryParse(row.Field<string>("GuarantorPercentageRange"), out guarantorPercentageRange);
+
+                if (b1 && role == 2 && b4 && string.IsNullOrEmpty(guarantorPercentageRange.ToString()))
                     richTextBox.AppendText(
                         $"error at LinkData ! if role = 2 there must be a GuarantorPercentageRange - found at row number {rows.IndexOf(row)} \n");
 
-                if (b1 && role == 1 && !string.IsNullOrEmpty(guarantorPercentageRange))
+                if (b1 && role == 1 && b4 && !string.IsNullOrEmpty(guarantorPercentageRange.ToString()))
                     richTextBox.AppendText(
                         $"error at LinkData ! if role = 1 there must not be a GuarantorPercentageRange - found at row number {rows.IndexOf(row)} \n");
             }
@@ -1233,19 +1300,21 @@ namespace WindowsFormsApp3
                 var b1 = DateTime.TryParseExact(row.Field<string>("BirthDate"), "yyyy-MM-dd", CultureInfo.CurrentCulture, DateTimeStyles.None, out var birthDate);
                 var year = birthDate.Year;
 
-                if (b1 == false)
-                    richTextBox.AppendText($"error at Individual ! Birthday isn't a valid date/wrong format - found at row number {rows.IndexOf(row)} \n");
+                if (year != 0001)
+                {
+                    if (b1 == false)
+                        richTextBox.AppendText($"error at Individual ! Birthday isn't a valid date/wrong format - found at row number {rows.IndexOf(row)} \n");
 
-                else if (year > 9999 || year < 1800)
-                    richTextBox.AppendText($"error at Individual ! Birthday year must be between 1800-9999 - found at row number {rows.IndexOf(row)} \n");
+                    else if (year > 9999 || year < 1800)
+                        richTextBox.AppendText($"error at Individual ! Birthday year must be between 1800-9999 - found at row number {rows.IndexOf(row)} \n");
 
-                if (b1 && b2 && (referenceDate.Year - birthDate.Year < 18))
-                    richTextBox.AppendText($"error at Individual ! Birthday year - referenceDate Year must be > 18 - found at row number {rows.IndexOf(row)} \n");
-                
-                if (b1 && b2 && (birthDate.Year >= referenceDate.Year - 18))
-                    richTextBox.AppendText($"error at Individual ! Birthday year must be >= referenceDate year - 18 - found at row number {rows.IndexOf(row)} \n");
+                    if (b1 && b2 && (referenceDate.Year - birthDate.Year < 18))
+                        richTextBox.AppendText($"error at Individual ! Birthday year - referenceDate Year must be > 18 - found at row number {rows.IndexOf(row)} \n");
+
+                    if (b1 && b2 && (birthDate.Year >= referenceDate.Year - 18))
+                        richTextBox.AppendText($"error at Individual ! Birthday year must be >= referenceDate year - 18 - found at row number {rows.IndexOf(row)} \n");
+                }
             }
-
         }
 
         public static void CheckFirstName(DataSet dataSet, RichTextBox richTextBox, IList<string> contractTypes)
