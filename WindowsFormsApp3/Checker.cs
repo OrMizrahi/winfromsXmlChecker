@@ -694,9 +694,8 @@ namespace WindowsFormsApp3
 
                     var b2 = int.TryParse(row.Field<string>("PaymentFrequency"), out var paymentFrequency);
 
-                    var plannedBaloonDateExists = row.Table.Columns.Contains("PlannedBaloonDate");
-                    var b3 = true;
-                    if (plannedBaloonDateExists)
+                    var b3 = false;
+                    if (row.Table.Columns.Contains("PlannedBaloonDate"))
                     {
                         b3 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out _);
                     }
@@ -710,8 +709,8 @@ namespace WindowsFormsApp3
 
                     richTextBox.AppendText(
                         $"error at {contractType} ! PlannedBaloonDate must only exist with PaymentFrequency = 10 , PlannedBaloonDate cleared!! - found at row number {rows.IndexOf(row)} \n");
-                    if (plannedBaloonDateExists)
-                        row.SetField("PlannedBaloonDate", "");
+
+                    row.SetField("PlannedBaloonDate", "");
 
                 }
             }
@@ -728,14 +727,13 @@ namespace WindowsFormsApp3
 
                 foreach (DataRow row in rows)
                 {
-                    var paymentHistoryExists = row.Table.Columns.Contains("PaymentHistory");
                     var paymentHistory = "";
-                    if (paymentHistoryExists)
+                    if (row.Table.Columns.Contains("PaymentHistory"))
                     {
-                        paymentHistory = row.Field<string>("Arrears");
+                        paymentHistory = row.Field<string>("PaymentHistory");
                     }
-                    //should check each character must belong to the PaymentHistoryDomain
-                    if (paymentHistoryExists && paymentHistory.Length != 24)
+                    
+                    if (string.IsNullOrEmpty(paymentHistory) == false &&  paymentHistory.Length != 24)
                         richTextBox.AppendText(
                             $"error at {contractType} ! PaymentHistory must be 24 characters long! - found at row number {rows.IndexOf(row)} \n");
                 }
@@ -753,10 +751,9 @@ namespace WindowsFormsApp3
 
                 foreach (DataRow row in rows)
                 {
-                    var plannedBaloonDateExists = row.Table.Columns.Contains("PlannedBaloonDate");
-                    var b1 = true;
-                    var plannedBaloonDate = new DateTime();
-                    if (plannedBaloonDateExists)
+                    var b1 = false;
+                    DateTime plannedBaloonDate =default;
+                    if (row.Table.Columns.Contains("PlannedBaloonDate"))
                     {
                         b1 = DateTime.TryParse(row.Field<string>("PlannedBaloonDate"), out plannedBaloonDate);
                     }
@@ -772,11 +769,11 @@ namespace WindowsFormsApp3
                     }
                     var b4 = int.TryParse(row.Field<string>("PaymentFrequency"), out var paymentFrequency);
 
-                    if (b1 && b2 && plannedBaloonDateExists && plannedBaloonDate < startingDate)
+                    if (b1 && b2  && plannedBaloonDate < startingDate)
                         richTextBox.AppendText(
                             $"error at {contractType} ! PlannedBaloonDate can't be less than StartingDate - found at row number {rows.IndexOf(row)} \n");
 
-                    if (b1 && b3 && plannedBaloonDateExists && plannedEndDateExists && plannedBaloonDate > plannedEndDate)
+                    if (b1 && b3  && plannedEndDateExists && plannedBaloonDate > plannedEndDate)
                         richTextBox.AppendText(
                             $"error at {contractType} ! PlannedBaloonDate can't be greater than PlannedEndDate - found at row number {rows.IndexOf(row)} \n");
 
@@ -785,7 +782,7 @@ namespace WindowsFormsApp3
 
                     richTextBox.AppendText(
                         $"error at {contractType} ! PlannedBaloonDate must only exist with paymentFrequency = 10 ,PlannedBaloonDate cleared! - found at row number {rows.IndexOf(row)} \n");
-                    if(plannedBaloonDateExists)
+                   
                         row.SetField("PlannedBaloonDate", "");
                 }
             }

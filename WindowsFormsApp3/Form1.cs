@@ -164,6 +164,12 @@ namespace WindowsFormsApp3
                 Checker.CmfList.ToList().ForEach(action => action(DataSet,richTextBox1));
 
             richTextBox1.Visible = true;
+            if (richTextBox1.TextLength == 0)
+            {
+                richTextBox1.ForeColor = Color.Green;
+                richTextBox1.AppendText("Checking is Done, no errors were found!");
+            }
+               
         }
 
        
